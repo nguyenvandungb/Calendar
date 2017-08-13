@@ -50,7 +50,7 @@ static const CGFloat kDotSize = 8;
         self.backgroundColor = [UIColor whiteColor];
         
         self.dayLabel = [[UILabel alloc]initWithFrame:CGRectZero];
-        self.dayLabel.font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
+        self.dayLabel.font = [UIFont systemFontOfSize:11];
         self.dayLabel.numberOfLines = 1;
         self.dayLabel.adjustsFontSizeToFitWidth = YES;
         
@@ -105,7 +105,8 @@ static const CGFloat kDotSize = 8;
     [super layoutSubviews];
     
     CGRect headerFrame = CGRectMake(0, 0, self.contentView.bounds.size.width, self.headerHeight);
-    self.dayLabel.frame =  CGRectInset(headerFrame, kHeaderMargin, kHeaderMargin);
+    CGRect rect = CGRectInset(headerFrame, kHeaderMargin, kHeaderMargin);
+    self.dayLabel.frame = rect;
     
     CGRect contentFrame = CGRectMake(0, self.headerHeight, self.contentView.bounds.size.width, self.contentView.bounds.size.height - self.headerHeight);
     contentFrame = CGRectInset(contentFrame, kHeaderMargin, kHeaderMargin);

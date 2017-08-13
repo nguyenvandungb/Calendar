@@ -68,9 +68,9 @@ const CGFloat kMonthHeaderMargin = 3.;
 - (id)init
 {
 	if (self = [super init]) {
-		_monthInsets = UIEdgeInsetsMake(20, 0, 20, 0);
+		_monthInsets = UIEdgeInsetsMake(0, 0, 0, 0);
 		_rowHeight = 140;
-		_dayHeaderHeight = 28;
+		_dayHeaderHeight = 0;
         _showEvents = YES;
 	}
 	return self;
@@ -106,6 +106,7 @@ const CGFloat kMonthHeaderMargin = 3.;
             headerFrame.origin.x += (xOffset + kMonthHeaderMargin);
             headerFrame.size.width -= (xOffset + 2*kMonthHeaderMargin);
         }
+        headerFrame.size.height = 0;
         UICollectionViewLayoutAttributes *attribs = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:MonthHeaderViewKind withIndexPath:path];
         attribs.frame = headerFrame;
         [monthsInfo setObject:attribs forKey:path];
@@ -121,7 +122,9 @@ const CGFloat kMonthHeaderMargin = 3.;
                 UICollectionViewLayoutAttributes *attribs = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:MonthRowViewKind withIndexPath:path];
                 CGFloat x = [self widthForColumnRange:NSMakeRange(0, col)] + self.monthInsets.left;
                 CGFloat width = [self widthForColumnRange:NSMakeRange(col, colRange.length)];
-                attribs.frame = CGRectMake(x, y + self.dayHeaderHeight, width, self.rowHeight - self.dayHeaderHeight);
+                CGFloat eventY = row * self.rowHeight + 20;
+                CGRect rect = CGRectMake(x + originX - 1, eventY + self.dayHeaderHeight, width + 2, self.rowHeight - self.dayHeaderHeight);
+                attribs.frame = rect;
                 attribs.zIndex = 1;
                 [rowsInfo setObject:attribs forKey:path];
             }
@@ -130,7 +133,7 @@ const CGFloat kMonthHeaderMargin = 3.;
             CGFloat cellY = 0;
 			for (; col < NSMaxRange(colRange); col++, day++)
 			{
-                cellY = row * self.rowHeight;
+                cellY = row * self.rowHeight + 20;
 				NSIndexPath *path = [NSIndexPath indexPathForItem:day inSection:month];
 				UICollectionViewLayoutAttributes *attribs = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:path];
 				CGFloat x = [self widthForColumnRange:NSMakeRange(0, col)] + self.monthInsets.left;

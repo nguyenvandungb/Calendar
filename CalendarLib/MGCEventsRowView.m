@@ -29,7 +29,7 @@
 //
 #import "MGCEventsRowView.h"
 
-static const CGFloat kCellSpacing = 2.;		// space around cells
+static const CGFloat kCellSpacing = 1.;		// space around cells
 
 
 @interface MGCEventsRowView ()
@@ -83,7 +83,7 @@ static const CGFloat kCellSpacing = 2.;		// space around cells
 		count = MAX(count, [self numberOfEventsForDayAtIndex:day]);
 	}
 	// if count > max, we have to keep one row to show "x more events"
-	return count > self.maxVisibleLines ? self.maxVisibleLines - 1 : count;
+    return 4;
 }
 
 - (NSUInteger)maxVisibleLines
@@ -203,22 +203,22 @@ static const CGFloat kCellSpacing = 2.;		// space around cells
 		}
 	}
 	
-	for (NSUInteger day = self.daysRange.location; day < NSMaxRange(self.daysRange); day++)
-	{
-		NSUInteger hiddenCount = [[daysWithMoreEvents objectForKey:@(day)]unsignedIntegerValue];
-		if (hiddenCount)
-		{
-			UILabel *label = [[UILabel alloc]initWithFrame:CGRectZero];
-			label.text = [NSString stringWithFormat:NSLocalizedString(@"%lu more...", nil), (unsigned long)hiddenCount];
-			label.textColor = [UIColor grayColor];
-			label.textAlignment = NSTextAlignmentRight;
-			label.font = [UIFont systemFontOfSize:11];
-			label.frame = [self rectForCellWithRange:NSMakeRange(day, 1) line:self.maxVisibleLines - 1];
-			
-			[self addSubview:label];
-			[self.labels addObject:label];
-		}
-	}
+//	for (NSUInteger day = self.daysRange.location; day < NSMaxRange(self.daysRange); day++)
+//	{
+//		NSUInteger hiddenCount = [[daysWithMoreEvents objectForKey:@(day)]unsignedIntegerValue];
+//		if (hiddenCount)
+//		{
+//			UILabel *label = [[UILabel alloc]initWithFrame:CGRectZero];
+//			label.text = [NSString stringWithFormat:NSLocalizedString(@"%lu more...", nil), (unsigned long)hiddenCount];
+//			label.textColor = [UIColor grayColor];
+//			label.textAlignment = NSTextAlignmentRight;
+//			label.font = [UIFont systemFontOfSize:11];
+//			label.frame = [self rectForCellWithRange:NSMakeRange(day, 1) line:self.maxVisibleLines - 1];
+//			
+//			[self addSubview:label];
+//			[self.labels addObject:label];
+//		}
+//	}
 }
 
 - (NSArray*)cellsInRect:(CGRect)rect

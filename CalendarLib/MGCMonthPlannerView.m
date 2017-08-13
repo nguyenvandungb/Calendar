@@ -107,9 +107,9 @@ typedef enum
     _dateFormatter = [NSDateFormatter new];
     _dateFormatter.calendar = _calendar;
     _dateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:kDefaultDateFormat options:0 locale:[NSLocale currentLocale]]; //kDefaultDateFormat;
-    _rowHeight = isiPad ? 140. : 60.;
-    _dayCellHeaderHeight = 30;
-    _headerHeight =  35;
+    _rowHeight = isiPad ? 140. : ([[UIScreen mainScreen] bounds].size.height * 0.7) / 6;
+    _dayCellHeaderHeight = 20;
+    _headerHeight =  20;
     _itemHeight = 16;
     _reuseQueue = [MGCReusableObjectQueue new];
     _eventRows = [MutableOrderedDictionary dictionaryWithCapacity:kRowCacheSize];
@@ -877,7 +877,7 @@ typedef enum
         _eventsView.delegate = self;
         _eventsView.showsVerticalScrollIndicator = NO;
         _eventsView.scrollsToTop = NO;
-        
+        _eventsView.pagingEnabled = true;
         [_eventsView registerClass:MGCMonthPlannerViewDayCell.class forCellWithReuseIdentifier:DayCellIdentifier];
         [_eventsView registerClass:MGCMonthPlannerBackgroundView.class forSupplementaryViewOfKind:MonthBackgroundViewKind withReuseIdentifier:MonthBackgroundViewIdentifier];
         [_eventsView registerClass:MGCMonthPlannerWeekView.class forSupplementaryViewOfKind:MonthRowViewKind withReuseIdentifier:MonthRowViewIdentifier];

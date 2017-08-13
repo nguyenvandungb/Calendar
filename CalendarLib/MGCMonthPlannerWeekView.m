@@ -76,6 +76,8 @@
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
+    CGRect bound = self.bounds;
+    
 	self.eventsView.frame = self.bounds;
 }
 
