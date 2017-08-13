@@ -377,7 +377,7 @@ typedef enum
 {
     NSDate *monthStart = [self.calendar mgc_startOfMonthForDate:date];
     NSUInteger numWeeks = [self.calendar rangeOfUnit:NSCalendarUnitWeekOfMonth inUnit:NSCalendarUnitMonth forDate:monthStart].length;
-    return numWeeks * self.rowHeight + self.monthInsets.top + self.monthInsets.bottom;
+    return self.eventsView.bounds.size.width;
 }
 
 // number of months loaded at once in the collection view
@@ -510,14 +510,14 @@ typedef enum
 }
 
 // returns start date for the month at given offset
-- (NSDate*)monthFromOffset:(CGFloat)yOffset
+- (NSDate*)monthFromOffset:(CGFloat)xOffset
 {
     NSDate *month = self.startDate;
-    CGFloat y = yOffset > 0 ? [self heightForMonthAtDate:month] : 0;
+    CGFloat x = xOffset > 0 ? [self heightForMonthAtDate:month] : 0;
     
-    while (y < fabs(yOffset)) {
-        month = [self.calendar dateByAddingUnit:NSCalendarUnitMonth value:(yOffset > 0 ? 1 : -1) toDate:month options:0];
-        y += [self heightForMonthAtDate:month];
+    while (x < fabs(xOffset)) {
+        month = [self.calendar dateByAddingUnit:NSCalendarUnitMonth value:(xOffset > 0 ? 1 : -1) toDate:month options:0];
+        x += [self heightForMonthAtDate:month];
     };
     
     return month;
@@ -811,10 +811,10 @@ typedef enum
 // returns the distance in months between old and new start date
 - (NSInteger)adjustStartDateForCenteredMonth:(NSDate*)date
 {
-    CGFloat contentHeight = self.eventsView.contentSize.height;
-    CGFloat boundsHeight = CGRectGetHeight(self.eventsView.bounds);
+    CGFloat contentWidth = self.eventsView.contentSize.width;
+    CGFloat boundsWidth = self.eventsView.bounds.size.width;
     
-    NSUInteger offset = floorf((contentHeight - boundsHeight) / self.monthMaximumHeight) / 2;
+    NSUInteger offset = floorf((contentWidth - boundsWidth) / boundsWidth) / 2;
     
     NSDate *start = [self.calendar dateByAddingUnit:NSCalendarUnitMonth value:-offset toDate:date options:0];
     if ([start compare:self.dateRange.start] == NSOrderedAscending) {
@@ -833,22 +833,23 @@ typedef enum
 // returns YES if the collection view was reloaded
 - (BOOL)recenterIfNeeded
 {
-    CGFloat yOffset = self.eventsView.contentOffset.y;
-    CGFloat contentHeight = self.eventsView.contentSize.height;
+    CGFloat xOffset = self.eventsView.contentOffset.x;
+    CGFloat contentWidth = self.eventsView.contentSize.width;
+    CGRect bounds = self.bounds;
 
-    if (yOffset < self.monthMaximumHeight || CGRectGetMaxY(self.eventsView.bounds) + self.monthMaximumHeight > contentHeight) {
+    if (xOffset >= contentWidth - bounds.size.width || xOffset <= 0) {
         
         NSDate *oldStart = [self.startDate copy];
         
-        NSDate *centerMonth = [self monthFromOffset:yOffset];
+        NSDate *centerMonth = [self monthFromOffset:xOffset];
         NSInteger monthOffset = [self adjustStartDateForCenteredMonth:centerMonth];
     
         if (monthOffset != 0) {
-            CGFloat y = [self yOffsetForMonth:oldStart];
+            CGFloat x = [self yOffsetForMonth:oldStart];
             [self.eventsView reloadData];
         
             CGPoint offset = self.eventsView.contentOffset;
-            offset.y = y + yOffset;
+            offset.x = x + xOffset;
             self.eventsView.contentOffset = offset;
             
             //NSLog(@"recentered - startdate offset by %d months", monthOffset);
@@ -876,6 +877,7 @@ typedef enum
         _eventsView.dataSource = self;
         _eventsView.delegate = self;
         _eventsView.showsVerticalScrollIndicator = NO;
+        _eventsView.showsHorizontalScrollIndicator = NO;
         _eventsView.scrollsToTop = NO;
         _eventsView.pagingEnabled = true;
         [_eventsView registerClass:MGCMonthPlannerViewDayCell.class forCellWithReuseIdentifier:DayCellIdentifier];
