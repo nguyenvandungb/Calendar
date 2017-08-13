@@ -62,6 +62,7 @@
 	}
 	
 	MGCMonthPlannerView *monthPlannerView = [[MGCMonthPlannerView alloc]initWithFrame:CGRectZero];
+    
 	monthPlannerView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
 	self.monthPlannerView = monthPlannerView;
 }
